@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>WiFi QRCode Generator</title>
+		<style type="text/css">
+			input, button, #qrcode { display: block; margin: 1em; }
+		</style>
+	</head>
+	<body>
+		<input id="ssid" placeholder="ssid" />
+		<select id="security">
+			<option value="WEP">WEP</option>
+			<option value="WPA">WPA/WPA2 PSK</option>
+			<option value="nopass">No encryption</option>
+		</select>
+		<input id="password" placeholder="password" />
+		<button onclick="update()">update</button>
+		<canvas id="qrcode"></canvas>
+
+		<script src="./qr.min.js"></script>
+		<script>
+			location.hash
+				.substring(1)
+				.split('&')
+				.map(function (kv) { return kv.split('='); })
+				.forEach(function (kv) {
+					document.getElementById(kv[0]).value = decodeURIComponent(kv[1]);
+				});
+			update();
+
+			function update () {
+				var ssid = document.getElementById('ssid').value;
+				var security = document.getElementById('security').value;
+				var password = document.getElementById('password').value;
+				qr.canvas({
+					canvas: document.getElementById('qrcode'),
+					value: 'WIFI:S:' + ssid + ';T:' + security + ';P:' + password + ';;',
+					size: 10
+				});
+			}
+		</script>
+	</body>
+</html>
